@@ -1,0 +1,42 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dex
+data:
+  config.yaml: |
+    issuer: https://kubeflow.86labs.cloud/dex
+    storage:
+      type: kubernetes
+      config:
+        inCluster: true
+    web:
+      http: 0.0.0.0:5556
+    logger:
+      level: "debug"
+      format: text
+    connectors:
+    - type: oidc
+      id: keycloak
+      name: keycloak
+      config:
+        issuer: https://sso.86labs.cloud/auth/realms/metal
+        clientID: $OIDC_CLIENT_ID
+        clientSecret: $OIDC_CLIENT_SECRET
+        redirectURI: https://kubeflow.86labs.cloud/dex/callback
+        insecure: false
+        insecureSkipEmailVerified: true
+        userNameKey: email
+        scopes:
+          - openid
+          - profile
+          - email
+          - offline_access
+    oauth2:
+      skipApprovalScreen: true
+    enablePasswordDB: false
+    staticClients:
+    # https://github.com/dexidp/dex/pull/1664
+    - idEnv: OIDC_CLIENT_ID
+      redirectURIs: ["/oauth2/callback"]
+      name: 'Dex Login Application'
+      secretEnv: OIDC_CLIENT_SECRET

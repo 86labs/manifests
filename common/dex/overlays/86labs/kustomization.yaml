@@ -1,0 +1,30 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+resources:
+- ../istio
+- dex-secret.yaml
+secretGenerator:
+  - name: dex-oidc-client-danging
+    type: Opaque
+patches:
+  - path: patches/config-map.yaml
+    target:
+      version: v1
+      kind: ConfigMap
+      name: dex
+      namespace: auth
+  # Hacky way to disable the default secret
+  - target:
+      kind: Secret
+      name: dex-oidc-client
+    patch: |-
+      - op: replace
+        path: /metadata/name
+        value: dex-oidc-client-dandling
+  - path: patches/deployment.yaml
+    target:
+      version: v1
+      kind: Deployment
+      name: dex
+      namespace: auth
