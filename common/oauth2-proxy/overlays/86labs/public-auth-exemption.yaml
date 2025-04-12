@@ -1,0 +1,22 @@
+
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: istio-ingressgateway-oauth2-exempt-proxy
+  namespace: istio-system
+spec:
+  action: ALLOW
+  selector:
+    matchLabels:
+      app: istio-ingressgateway
+  rules:
+  # We ONLY authenticate requests that DON'T have an `Authorization` header using oauth2-proxy.
+  # This is because we use RequestAuthentication to authenticate requests with an `Authorization` header.
+  - when:
+    - key: request.headers[authorization]
+      notValues: ["*"]
+    to:
+    - operation:
+        hosts:
+        - "*.knative-serving.kubeflow.86labs.cloud"
+        - "*.public.kubeflow.86labs.cloud"

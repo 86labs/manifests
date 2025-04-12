@@ -1,0 +1,115 @@
+apiVersion: install.istio.io/v1alpha1
+kind: IstioOperator
+spec:
+  meshConfig:
+    ingressControllerMode: DEFAULT
+    accessLogFile: /dev/stdout
+    defaultConfig:
+      discoveryAddress: istiod.istio-system.svc:15012
+      proxyMetadata: {}
+      tracing: {}
+    enablePrometheusMerge: true
+    rootNamespace: istio-system
+    tcpKeepalive:
+      interval: 5s
+      probes: 3
+      time: 10s
+    trustDomain: cluster.local
+    extensionProviders:
+    - envoyExtAuthzHttp:
+        headersToDownstreamOnDeny:
+        - content-type
+        - set-cookie
+        headersToUpstreamOnAllow:
+        - authorization
+        - path
+        - x-auth-request-email
+        - x-auth-request-groups
+        - x-auth-request-user
+        includeRequestHeadersInCheck:
+        - authorization
+        - cookie
+        service: oauth2-proxy.oauth2-proxy.svc.cluster.local
+        port: 80
+      name: oauth2-proxy
+  components:
+    ingressGateways:
+    - enabled: true
+      name: istio-ingressgateway
+      k8s:
+        serviceAnnotations:
+          external-dns.alpha.kubernetes.io/hostname: kubeflow.86labs.cloud,*.kubeflow.86labs.cloud
+        service:
+          type: LoadBalancer
+          externalTrafficPolicy: Local
+          ports:
+            - port: 80
+              targetPort: 8080
+              name: http
+            - port: 443
+              targetPort: 8443
+              name: https
+    - enabled: true
+      name: kserve-ingress
+      label:
+        app: kserve-ingress
+        istio: kserve-ingress
+      k8s:
+        serviceAnnotations:
+          external-dns.alpha.kubernetes.io/hostname: kserve.86labs.cloud,*.kserve.86labs.cloud
+        service:
+          externalTrafficPolicy: Local
+          type: LoadBalancer
+          ports:
+            - port: 80
+              targetPort: 8080
+              name: http
+            - port: 443
+              targetPort: 8443
+              name: https
+    # Cluster-local gateway for KFServing
+    - enabled: true
+      name: cluster-local-gateway
+      # https://github.com/istio/istio/issues/19263#issuecomment-615833092
+      label:
+        app: cluster-local-gateway
+        istio: cluster-local-gateway
+      k8s:
+        env:
+        - name: ISTIO_META_ROUTER_MODE
+          value: sni-dnat
+        hpaSpec:
+          maxReplicas: 5
+          metrics:
+          - resource:
+              name: cpu
+              target:
+                type: Utilization
+                averageUtilization: 80
+            type: Resource
+          minReplicas: 1
+          scaleTargetRef:
+            apiVersion: apps/v1
+            kind: Deployment
+            name: cluster-local-gateway
+        resources:
+          limits:
+            cpu: 2000m
+            memory: 1024Mi
+          requests:
+            cpu: 100m
+            memory: 128Mi
+        service:
+          type: ClusterIP
+          ports:
+          - name: status-port
+            port: 15020
+            targetPort: 15020
+          - name: http2
+            port: 80
+            targetPort: 8080
+
+    # Disable EgressGateway
+    egressGateways:
+    - enabled: false
+      name: istio-egressgateway

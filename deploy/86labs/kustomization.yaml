@@ -35,11 +35,15 @@ sortOptions:
 resources:
 - ../../common/cert-manager/kubeflow-issuer/base
 # Istio
-- ../../common/istio-1-24/istio-crds/base
+# - ../../common/istio-1-24/istio-crds/base
 - ../../common/istio-1-24/istio-namespace/base
 - ../../common/istio-1-24/istio-install/overlays/86labs
 - ../../common/oauth2-proxy/overlays/86labs    # for all clusters
-- ../../common/dex/overlays/86labs
+
+# Dex is not necessary. you can integrate OIDC directly into oauth2-proxy.
+# Dex would be useful for multiple providers I guess.
+# - ../../common/dex/overlays/86labs
+
 # Kubeflow namespace
 - ../../common/kubeflow-namespace/base
 # NetworkPolicies
@@ -68,5 +72,10 @@ resources:
 - ../../apps/tensorboard/tensorboards-web-app/upstream/overlays/istio
 # Kubeflow Pipelines
 - ../../apps/pipeline/upstream/env/86labs
+# knative
+- ../../common/knative/knative-serving/overlays/86labs
+# kserv
+- ../../apps/kserve/86labs
+- ../../apps/kserve/models-web-app/overlays/86labs
 # katib
-- ../apps/katib/upstream/installs/katib-with-kubeflow
+# - ../apps/katib/upstream/installs/katib-with-kubeflow

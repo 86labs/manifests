@@ -1,0 +1,17 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  name: config-network
+  namespace: knative-serving
+data:
+  external-domain-tls: Enabled
+  cluster-local-domain-tls: Disabled
+  system-internal-tls: Disabled
+  http-protocol: Enabled
+  # mesh-compatibility-mode: disabled
+  namespace-wildcard-cert-selector: |-
+    matchExpressions:
+    - key: "networking.knative.dev/disableWildcardCert"
+      operator: "NotIn"
+      values: ["true"]
+  domain-template: "{{.Name}}.{{.Namespace}}.{{.Domain}}"

@@ -1,0 +1,21 @@
+# @name token
+POST https://sso.86labs.cloud/auth/realms/metal/protocol/openid-connect/token
+Content-Type: application/x-www-form-urlencoded
+
+client_id={{client_id}}
+&client_secret={{client_secret}}
+&username={{user}}
+&password={{password}}
+&grant_type=password
+
+###
+POST https://sklearn-iris.kubeflow-user-admin.kserve.86labs.cloud/v1/models/sklearn-iris:predict
+Content-Type: application/json
+# Authorization: Bearer {{ token.response.body.access_token }}
+
+{
+  "instances": [
+    [6.8,  2.8,  4.8,  1.4],
+    [6.0,  3.4,  4.5,  1.6]
+  ]
+}
