@@ -1,0 +1,12 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: mlflow
+spec:
+  selector:
+    app.kubernetes.io/part-of: mlflow
+    app.kubernetes.io/component: tracking
+  ports:
+    - protocol: TCP
+      port: 5000
+      targetPort: 5000

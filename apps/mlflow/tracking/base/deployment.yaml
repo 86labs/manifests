@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-tracking
+  labels:
+    app.kubernetes.io/part-of: mlflow
+    app.kubernetes.io/component: tracking
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/part-of: mlflow
+      app.kubernetes.io/component: tracking
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/part-of: mlflow
+        app.kubernetes.io/component: tracking
+    spec:
+      serviceAccountName: mlflow
+      # initContainers:
+      # - name: dbupgrade
+      #   image: gfeldman8/mlflow:2.21.3
+      #   command: ["/bin/bash", "-c"]
+      #   args: ["mlflow db upgrade $(MLFLOW_DB_URI)"]
+      #   env:
+      #     - name: MLFLOW_DB_USER
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: mlflow-db-secret
+      #           key: username
+      #     - name: MLFLOW_DB_PASSWORD
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: mlflow-db-secret
+      #           key: password
+      #     - name: MLFLOW_DB_HOST
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: mlflow-db-secret
+      #           key: host
+      #     - name: MLFLOW_DB_PORT
+      #       value: "3306"
+      #     - name: MLFLOW_DB_NAME
+      #       valueFrom:
+      #         secretKeyRef:
+      #           name: mlflow-db-secret
+      #           key: dbname
+      #     - name: MLFLOW_DB_URI
+      #       value: "mysql+pymysql://$(MLFLOW_DB_USER):$(MLFLOW_DB_PASSWORD)@$(MLFLOW_DB_HOST):$(MLFLOW_DB_PORT)/$(MLFLOW_DB_NAME)"
+      containers:
+      - name: mlflow-tracking
+        image: gfeldman8/mlflow:2.21.3
+        imagePullPolicy: IfNotPresent
+        command: ["/bin/bash", "-c"]
+        env:
+          - name: MLFLOW_S3_ENDPOINT_URL
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-s3-secret
+                key: endpoint-url
+          - name: MLFLOW_S3_BUCKET
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-s3-secret
+                key: bucket
+          - name: AWS_ACCESS_KEY_ID
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-s3-secret
+                key: accesskey
+          - name: AWS_SECRET_ACCESS_KEY
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-s3-secret
+                key: secretkey
+          - name: MLFLOW_DB_USER
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-db-secret
+                key: username
+          - name: MLFLOW_DB_PASSWORD
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-db-secret
+                key: password
+          - name: MLFLOW_DB_HOST
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-db-secret
+                key: host
+          - name: MLFLOW_DB_PORT
+            value: "3306"
+          - name: MLFLOW_DB_NAME
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-db-secret
+                key: dbname
+          - name: MLFLOW_DB_URI
+            value: "mysql+pymysql://$(MLFLOW_DB_USER):$(MLFLOW_DB_PASSWORD)@$(MLFLOW_DB_HOST):$(MLFLOW_DB_PORT)/$(MLFLOW_DB_NAME)"
+
+
+        args: ["mlflow server --host 0.0.0.0 --port 5000 --default-artifact-root s3://$(MLFLOW_S3_BUCKET) --backend-store-uri $(MLFLOW_DB_URI)"]
+        ports:
+        - containerPort: 5000

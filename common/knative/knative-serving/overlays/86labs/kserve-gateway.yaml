@@ -1,28 +1,27 @@
 apiVersion: networking.istio.io/v1alpha3
 kind: Gateway
 metadata:
-  name: kubeflow-gateway
-  namespace: kubeflow
+  name: kserve-gateway
 spec:
   selector:
-    app: istio-ingressgateway
+    app: kserve-ingress
+    istio: kserve-ingress
   servers:
   - port:
       number: 80
       name: http
       protocol: HTTP
     hosts:
-    - "kubeflow.86labs.cloud"
-    - "*.kubeflow.86labs.cloud"
+      - "*"
+      - "*"
     tls:
       httpsRedirect: true
   - hosts:
-      - "kubeflow.86labs.cloud"
-      - "*.kubeflow.86labs.cloud"
+      - "*"
+      - "*"
     port:
       number: 443
       name: https
       protocol: HTTPS
     tls:
-      mode: SIMPLE
-      credentialName: wildcard-knative
+      mode: PASSTHROUGH

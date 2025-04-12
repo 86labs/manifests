@@ -1,0 +1,17 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: wildcard-knative
+  # Put this in the same namespace as the nginx service
+  namespace: istio-system
+spec:
+  # Secret names are always required.
+  secretName: wildcard-knative
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  commonName: '*.kubeflow.86labs.cloud'
+  dnsNames:
+  - kubeflow.86labs.cloud
+  - '*.kubeflow.86labs.cloud'
+  - '*.kserve.kubeflow.86labs.cloud'

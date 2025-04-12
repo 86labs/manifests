@@ -1,0 +1,17 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: centraldashboard
+  namespace: kubeflow
+spec:
+  template:
+    spec:
+      containers:
+      - name: centraldashboard
+        env:
+        # This successfully logs out the user but the user is not redirected to
+        # the home page.
+        #
+        # Please refresh the page after logging out.
+        - name: LOGOUT_URL
+          value: https://sso.86labs.cloud/auth/realms/metal/protocol/openid-connect/logout?id_token_hint={{token}}&post_logout_redirect_uri=https%3A%2F%2Fkubeflow.86labs.cloud

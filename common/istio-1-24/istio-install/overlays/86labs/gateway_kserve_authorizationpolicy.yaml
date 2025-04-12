@@ -1,0 +1,15 @@
+# Allow all traffic to the istio-ingressgateway
+apiVersion: security.istio.io/v1beta1
+kind: AuthorizationPolicy
+metadata:
+  name: kserve-gateway
+  namespace: istio-system
+spec:
+  action: ALLOW
+  selector:
+    # Same as the istio-ingressgateway Service selector
+    matchLabels:
+      app: kserve-ingress
+      istio: kserve-ingress
+  rules:
+  - {}

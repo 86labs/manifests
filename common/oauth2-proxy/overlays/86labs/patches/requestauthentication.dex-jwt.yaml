@@ -16,7 +16,8 @@ spec:
       app: istio-ingressgateway
 
   jwtRules:
-  - issuer: https://kubeflow.86labs.cloud/dex
+  - issuer: https://sso.86labs.cloud/auth/realms/metal
+    jwksUri: "https://sso.86labs.cloud/auth/realms/metal/protocol/openid-connect/certs"
 
     # `forwardOriginalToken` is not strictly required to be true.
     # there are pros and cons to each value:
