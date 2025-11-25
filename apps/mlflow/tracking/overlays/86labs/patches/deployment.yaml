@@ -1,0 +1,48 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mlflow-tracking
+  labels:
+    app.kubernetes.io/part-of: mlflow
+    app.kubernetes.io/component: tracking
+spec:
+  template:
+    spec:
+      containers:
+      - name: mlflow-tracking
+        imagePullPolicy: Always
+        env:
+        - name: LOGLEVEL
+          value: DEBUG
+        - name: OIDC_ISSUER_URL
+          value: "https://sso.86labs.cloud/auth/realms/metal"
+        - name: OIDC_CLIENT_ID
+          value: "kubeflow.86labs.cloud"
+        - name: MLFLOW_AUTH_CONFIG_PATH
+          value: /etc/mlflow/auth.ini
+        - name: MLFLOW_FLASK_SERVER_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: mlflow-auth-secret
+              key: secret_token
+        volumeMounts:
+        - name: mlflow-auth
+          mountPath: /etc/mlflow/auth.ini
+          subPath: kubeflow_auth.ini
+        - name: mlflow-sqllite
+          mountPath: /data/mlflow
+        - name: custom-authenticator
+          mountPath: /kubeflow_auth.py
+          subPath: kubeflow_auth.py
+        args: ["mlflow server --app-name basic-auth --host 0.0.0.0 --port 5000 --default-artifact-root s3://$(MLFLOW_S3_BUCKET) --backend-store-uri $(MLFLOW_DB_URI) "]
+
+      volumes:
+      - name: custom-authenticator
+        configMap:
+          name: custom-authenticator
+      - name: mlflow-auth
+        secret:
+          secretName: mlflow-auth-secret
+      - name: mlflow-sqllite
+        persistentVolumeClaim:
+          claimName: mlflow-sqllite

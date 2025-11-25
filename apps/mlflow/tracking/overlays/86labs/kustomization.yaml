@@ -5,3 +5,9 @@ resources:
 - ../../base
 - external-secret-db.yaml
 - external-secret-s3.yaml
+- external-secret-auth.yaml
+- pvc-sqllite.yaml
+- configmap-auth.yaml
+
+patches:
+- path: patches/deployment.yaml

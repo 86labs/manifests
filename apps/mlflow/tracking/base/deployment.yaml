@@ -61,6 +61,11 @@ spec:
               secretKeyRef:
                 name: mlflow-s3-secret
                 key: endpoint-url
+          - name: AWS_ENDPOINT_URL_S3
+            valueFrom:
+              secretKeyRef:
+                name: mlflow-s3-secret
+                key: endpoint-url
           - name: MLFLOW_S3_BUCKET
             valueFrom:
               secretKeyRef:
@@ -100,6 +105,8 @@ spec:
                 key: dbname
           - name: MLFLOW_DB_URI
             value: "mysql+pymysql://$(MLFLOW_DB_USER):$(MLFLOW_DB_PASSWORD)@$(MLFLOW_DB_HOST):$(MLFLOW_DB_PORT)/$(MLFLOW_DB_NAME)"
+          - name: MLFLOW_REGISTRY_DB_URI
+            value: "mysql+pymysql://$(MLFLOW_DB_USER):$(MLFLOW_DB_PASSWORD)@$(MLFLOW_DB_HOST):$(MLFLOW_DB_PORT)/mlflow_models"
 
 
         args: ["mlflow server --host 0.0.0.0 --port 5000 --default-artifact-root s3://$(MLFLOW_S3_BUCKET) --backend-store-uri $(MLFLOW_DB_URI)"]
