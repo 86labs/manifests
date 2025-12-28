@@ -8,6 +8,12 @@ The **Kubeflow Manifests** are a collection of community-maintained manifests fo
 For a stable and conservative experience, we recommend using the [latest stable release](https://github.com/kubeflow/manifests/releases). However, please consult the more up-to-date documentation in the master branch.
 You can also install the master branch of [`kubeflow/manifests`](https://github.com/kubeflow/manifests) by following the instructions [here](https://github.com/kubeflow/manifests?tab=readme-ov-file#installation) and providing us with feedback.
 
+We are planning to cut 2 releases per year, for example 26.03 and 26.10 before each KubeCon EU and NA.
+We ask each working group/component to provide non-breaking patch releases for 6 months based on the version in each date release.
+We try to BEST-EFFORT support each realease for 6 monhts as community. There is [commercial support](https://www.kubeflow.org/docs/started/support/#support-from-commercial-providers-in-the-kubeflow-ecosystem) available if needed.
+The working groups (KFP, Katib, Trainer, ...) are allowed to release new component versions with breaking changes, but they will only be included in the master branch or the next date release.
+This should only apply to “stable” components, as “alpha/beta” components might release breaking changes in patch releases.
+
 ## Table of Contents
 
 <!-- toc -->
@@ -57,7 +63,7 @@ This repository periodically synchronizes all official Kubeflow components from 
 | Component | Local Manifests Path | Upstream Revision | CPU (millicores) | Memory (Mi) |  PVC Storage (GB) |
 | - | - | - | - | - | - |
 | Training Operator | applications/training-operator/upstream | [v1.9.2](https://github.com/kubeflow/training-operator/tree/v1.9.2/manifests) | 3m | 25Mi | 0GB |
-| Trainer | applications/trainer/upstream | [f12a6d3](https://github.com/kubeflow/trainer/tree/f12a6d399a3dbb84d8829a5e7603ab310c45df6a/manifests) | 8m | 143Mi | 0GB |
+| Trainer | applications/trainer/upstream | [v2.1.0](https://github.com/kubeflow/trainer/tree/v2.1.0/manifests) | 8m | 143Mi | 0GB |
 | Notebook Controller | applications/jupyter/notebook-controller/upstream | [v1.10.0](https://github.com/kubeflow/kubeflow/tree/v1.10.0/components/notebook-controller/config) | 5m | 93Mi | 0GB |
 | PVC Viewer Controller | applications/pvcviewer-controller/upstream | [v1.10.0](https://github.com/kubeflow/kubeflow/tree/v1.10.0/components/pvcviewer-controller/config) | 15m | 128Mi | 0GB |
 | Tensorboard Controller | applications/tensorboard/tensorboard-controller/upstream | [v1.10.0](https://github.com/kubeflow/kubeflow/tree/v1.10.0/components/tensorboard-controller/config) | 15m | 128Mi | 0GB |
@@ -67,14 +73,14 @@ This repository periodically synchronizes all official Kubeflow components from 
 | Jupyter Web Application | applications/jupyter/jupyter-web-app/upstream | [v1.10.0](https://github.com/kubeflow/kubeflow/tree/v1.10.0/components/crud-web-apps/jupyter/manifests) | 4m | 231Mi | 0GB |
 | Tensorboards Web Application | applications/tensorboard/tensorboards-web-app/upstream | [v1.10.0](https://github.com/kubeflow/kubeflow/tree/v1.10.0/components/crud-web-apps/tensorboards/manifests) |  |  |  |
 | Volumes Web Application | applications/volumes-web-app/upstream | [v1.10.0](https://github.com/kubeflow/kubeflow/tree/v1.10.0/components/crud-web-apps/volumes/manifests) | 4m | 226Mi | 0GB |
-| Katib | applications/katib/upstream | [v0.18.0](https://github.com/kubeflow/katib/tree/v0.18.0/manifests/v1beta1) | 13m | 476Mi | 10GB |
-| KServe | applications/kserve/kserve | [v0.15.0](https://github.com/kserve/kserve/releases/tag/v0.15.0/install/v0.15.0) | 600m | 1200Mi | 0GB |
+| Katib | applications/katib/upstream | [v0.19.0](https://github.com/kubeflow/katib/tree/v0.19.0/manifests/v1beta1) | 13m | 476Mi | 10GB |
+| KServe | applications/kserve/kserve | [v0.15.2](https://github.com/kserve/kserve/releases/tag/v0.15.2/install/v0.15.2) | 600m | 1200Mi | 0GB |
 | KServe Models Web Application | applications/kserve/models-web-app | [v0.15.0](https://github.com/kserve/models-web-app/tree/v0.15.0/config) | 6m | 259Mi  | 0GB |
-| Kubeflow Pipelines | applications/pipeline/upstream | [2.14.3](https://github.com/kubeflow/pipelines/tree/2.14.3/manifests/kustomize) | 970m | 3552Mi | 35GB |
-| Kubeflow Model Registry | applications/model-registry/upstream | [v0.3.3](https://github.com/kubeflow/model-registry/tree/v0.3.3/manifests/kustomize) | 510m | 2112Mi | 20GB |
-| Spark Operator	|	applications/spark/spark-operator	|	[2.3.0](https://github.com/kubeflow/spark-operator/tree/v2.3.0) | 9m | 41Mi | 0GB |
+| Kubeflow Pipelines | applications/pipeline/upstream | [2.15.0](https://github.com/kubeflow/pipelines/tree/2.15.0/manifests/kustomize) | 970m | 3552Mi | 35GB |
+| Kubeflow Model Registry | applications/model-registry/upstream | [v0.3.4](https://github.com/kubeflow/model-registry/tree/v0.3.4/manifests/kustomize) | 510m | 2112Mi | 20GB |
+| Spark Operator	|	applications/spark/spark-operator	|	[2.4.0](https://github.com/kubeflow/spark-operator/tree/v2.4.0) | 9m | 41Mi | 0GB |
 | Istio | common/istio | [1.28.0](https://github.com/istio/istio/releases/tag/1.28.0) | 750m | 2364Mi | 0GB |
-| Knative | common/knative/knative-serving <br /> common/knative/knative-eventing | [v1.16.2](https://github.com/knative/serving/releases/tag/knative-v1.16.2) <br /> [v1.16.4](https://github.com/knative/eventing/releases/tag/knative-v1.16.4) | 1450m | 1038Mi | 0GB |
+| Knative | common/knative/knative-serving <br /> common/knative/knative-eventing | [v1.20.0](https://github.com/knative/serving/releases/tag/knative-v1.20.0) <br /> [v1.20.0](https://github.com/knative/eventing/releases/tag/knative-v1.20.0) | 1450m | 1038Mi | 0GB |
 | Cert Manager | common/cert-manager | [1.16.1](https://github.com/cert-manager/cert-manager/releases/tag/v1.16.1) | 3m | 128Mi | 0GB |
 | Dex | common/dex | [2.43.1](https://github.com/dexidp/dex/releases/tag/v2.43.1) | 3m | 27Mi | 0GB |
 | OAuth2-Proxy | common/oauth2-proxy | [7.10.0](https://github.com/oauth2-proxy/oauth2-proxy/releases/tag/v7.10.0) | 3m | 27Mi | 0GB |
@@ -101,10 +107,10 @@ The `example` directory contains an example kustomization for the single command
 :warning: In both options, we use a default email (`user@example.com`) and password (`12341234`). For any production Kubeflow deployment, you should change the default password by following [the relevant section](#change-default-user-password).
 
 ### Prerequisites
-- This is the master branch, which targets Kubernetes version 1.32.
+- This is the master branch, which targets Kubernetes version 1.34+.
 - For the specific Kubernetes version per release, consult the [release notes](https://github.com/kubeflow/manifests/releases).
 - Either our local Kind (installed below) or your own Kubernetes cluster with a default [StorageClass](https://kubernetes.io/docs/concepts/storage/storage-classes/).
-- Kustomize version [5.4.3+](https://github.com/kubernetes-sigs/kustomize/releases/tag/kustomize%2Fv5.4.3).
+- Kustomize version [5.7.1](https://github.com/kubernetes-sigs/kustomize/releases/tag/kustomize%2Fv5.7.1).
 - Kubectl version compatible with your Kubernetes cluster ([Version Skew Policy](https://kubernetes.io/releases/version-skew-policy/#kubectl)).
 
 ---
@@ -133,7 +139,7 @@ kind: Cluster
 apiVersion: kind.x-k8s.io/v1alpha4
 nodes:
 - role: control-plane
-  image: kindest/node:v1.32.0@sha256:c48c62eac5da28cdadcf560d1d8616cfa6783b58f0d94cf63ad1bf49600cb027
+  image: kindest/node:v1.34.0@sha256:7416a61b42b1662ca6ca89f02028ac133a309a2a30ba309614e8ec94d976dc5a
   kubeadmConfigPatches:
   - |
     kind: ClusterConfiguration
@@ -758,5 +764,8 @@ pre-commit run
   **A:** Istio CNI provides better security by eliminating the need for privileged init containers, making it more compatible with Pod Security Standards (PSS). It also enables native sidecars support introduced in Kubernetes 1.28, which helps address issues with init containers and application lifecycle management.
 - **Q:** Why does Istio CNI fail on Google Kubernetes Engine (GKE) with "read-only file system" errors?
   **A:** GKE mounts `/opt/cni/bin` as read-only for security reasons. Use the GKE-specific overlay: `kubectl apply -k common/istio/istio-install/overlays/gke` (or `overlays/ambient-gke` for ambient mode). These overlays use GKE's writable CNI directory at `/home/kubernetes/bin`. For details, see [Istio CNI Prerequisites](https://istio.io/latest/docs/setup/additional-setup/cni/#prerequisites).
+
+
+
 
 
